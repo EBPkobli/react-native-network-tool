@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#3c83f6",
+              "background-light": "#f5f7f8",
+              "background-dark": "#101722",
+            },
+            fontFamily: {
+              "display": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<title>Network Debugger | Connect</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex items-center justify-center antialiased">
+<!-- Main Container -->
+<div class="relative w-full max-w-md p-6">
+<!-- Abstract Background Glow -->
+<div class="absolute -top-24 -left-24 w-64 h-64 bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="absolute -bottom-24 -right-24 w-64 h-64 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+<!-- Connection Card -->
+<div class="relative bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl p-8 shadow-2xl backdrop-blur-sm">
+<!-- Icon / Brand Mark -->
+<div class="flex justify-center mb-8">
+<div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary text-3xl">terminal</span>
+</div>
+</div>
+<!-- Header Section -->
+<div class="text-center mb-8">
+<h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
+                    Connect to Debugger
+                </h1>
+<p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                    Enter your local port to start monitoring network traffic
+                </p>
+</div>
+<!-- Input Form Area -->
+<div class="space-y-6">
+<div class="flex flex-col gap-2">
+<label class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1" for="port-input">
+                        Port Number
+                    </label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-slate-400 group-focus-within:text-primary transition-colors text-xl">router</span>
+</div>
+<input class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg h-14 pl-12 pr-4 text-lg font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" id="port-input" placeholder="e.g. 8081, 3000" type="text"/>
+</div>
+</div>
+<!-- Connect Button -->
+<button class="w-full h-12 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary/20 active:scale-[0.98]">
+<span>Connect</span>
+<span class="material-symbols-outlined text-xl">sensors</span>
+</button>
+</div><!-- Available Devices Section -->
+<div class="mt-8 space-y-4">
+<div class="flex items-center justify-between px-1">
+<h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+            Available Devices
+        </h2>
+<button class="p-1 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors group text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-sm">refresh</span>
+</button>
+</div>
+<div class="grid gap-3">
+<!-- Device Item 1 -->
+<button class="flex items-center justify-between p-4 bg-slate-100 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 rounded-lg hover:border-primary/50 hover:bg-primary/5 transition-all text-left group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">smartphone</span>
+</div>
+<div>
+<div class="text-sm font-semibold text-slate-900 dark:text-white">iPhone 15 Pro</div>
+<div class="text-[10px] text-slate-500 uppercase tracking-tight">Port: 8081</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary text-lg">chevron_right</span>
+</button>
+<!-- Device Item 2 -->
+<button class="flex items-center justify-between p-4 bg-slate-100 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 rounded-lg hover:border-primary/50 hover:bg-primary/5 transition-all text-left group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">ad_units</span>
+</div>
+<div>
+<div class="text-sm font-semibold text-slate-900 dark:text-white">Pixel 7 Emulator</div>
+<div class="text-[10px] text-slate-500 uppercase tracking-tight">Port: 8082</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Footer Hints -->
+<div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between text-[11px] text-slate-400 font-medium uppercase tracking-widest">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Service Ready
+                    </div>
+<div>v1.2.0</div>
+</div>
+</div>
+</div>
+<!-- Decorative Info -->
+<div class="mt-6 flex justify-center gap-6">
+<div class="flex items-center gap-2 text-slate-400 text-xs">
+<span class="material-symbols-outlined text-sm">security</span>
+<span>Localhost only</span>
+</div>
+<div class="flex items-center gap-2 text-slate-400 text-xs">
+<span class="material-symbols-outlined text-sm">history</span>
+<span>Auto-reconnect</span>
+</div>
+</div>
+</div>
+</body></html>

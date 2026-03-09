@@ -1,0 +1,22 @@
+{
+  "name": "reactnative-network-tool",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build:shared": "npm run build --workspace=packages/shared",
+    "build:sdk": "npm run build --workspace=packages/sdk",
+    "build:bridge": "npm run build --workspace=apps/bridge",
+    "build:dashboard": "npm run build --workspace=apps/dashboard",
+    "build": "npm run build:shared && npm run build:sdk",
+    "typecheck": "npm run build:shared && tsc --noEmit --project packages/shared/tsconfig.json && tsc --noEmit --project packages/sdk/tsconfig.json",
+    "dev:bridge": "node scripts/dev-bridge.mjs",
+    "dev:dashboard": "node scripts/dev-dashboard.mjs",
+    "bridge": "node scripts/dev-bridge.mjs",
+    "dashboard": "node scripts/dev-dashboard.mjs",
+    "test:e2e": "node scripts/e2e-test.mjs"
+  }
+}

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3c83f6",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display selection:bg-primary/30">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar: Request List -->
+<aside class="w-1/3 min-w-[380px] max-w-md border-r border-slate-200 dark:border-slate-800 flex flex-col bg-background-light dark:bg-background-dark/50">
+<!-- Search & Filter Header -->
+<div class="p-4 space-y-3 border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">pulse_alert</span>
+<h1 class="text-sm font-semibold tracking-tight uppercase opacity-80">Network Inspector</h1>
+</div>
+<div class="flex gap-2">
+<button class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-800 rounded">
+<span class="material-symbols-outlined text-sm">block</span>
+</button>
+<button class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-800 rounded">
+<span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-900 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-1 focus:ring-primary placeholder:text-slate-500" placeholder="Filter requests (e.g. method:GET)" type="text"/>
+</div>
+<div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+<span class="px-2 py-1 text-[10px] font-bold uppercase rounded bg-primary text-white cursor-pointer">All</span>
+<span class="px-2 py-1 text-[10px] font-bold uppercase rounded hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer">Fetch/XHR</span>
+<span class="px-2 py-1 text-[10px] font-bold uppercase rounded hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer">JS</span>
+<span class="px-2 py-1 text-[10px] font-bold uppercase rounded hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer">CSS</span>
+<span class="px-2 py-1 text-[10px] font-bold uppercase rounded hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer">Img</span>
+</div>
+</div>
+<!-- Request Logs -->
+<div class="flex-1 overflow-y-auto custom-scrollbar">
+<!-- Active Request -->
+<div class="flex items-center gap-4 px-4 py-3 bg-primary/10 border-l-2 border-primary cursor-pointer group">
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-0.5">
+<span class="text-[10px] font-bold text-green-500 uppercase">POST</span>
+<span class="text-sm font-medium truncate">/api/v1/telemetry/events</span>
+</div>
+<p class="text-[11px] text-slate-500 truncate">https://analytics-service.internal.io</p>
+</div>
+<div class="text-right shrink-0">
+<span class="text-xs font-mono text-green-500">201 OK</span>
+<p class="text-[10px] text-slate-500">124ms</p>
+</div>
+</div>
+<!-- Log Items -->
+<div class="flex items-center gap-4 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800/50 cursor-pointer border-l-2 border-transparent transition-colors">
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-0.5">
+<span class="text-[10px] font-bold text-primary uppercase">GET</span>
+<span class="text-sm font-medium truncate">/user/profile/me</span>
+</div>
+<p class="text-[11px] text-slate-500 truncate">https://api.core-app.com</p>
+</div>
+<div class="text-right shrink-0">
+<span class="text-xs font-mono text-slate-100">200</span>
+<p class="text-[10px] text-slate-500">45ms</p>
+</div>
+</div>
+<div class="flex items-center gap-4 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800/50 cursor-pointer border-l-2 border-transparent transition-colors">
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-0.5">
+<span class="text-[10px] font-bold text-primary uppercase">GET</span>
+<span class="text-sm font-medium truncate">/assets/bundle.main.js</span>
+</div>
+<p class="text-[11px] text-slate-500 truncate">https://static.cdn-provider.net</p>
+</div>
+<div class="text-right shrink-0">
+<span class="text-xs font-mono text-amber-500">304</span>
+<p class="text-[10px] text-slate-500">12ms</p>
+</div>
+</div>
+<div class="flex items-center gap-4 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800/50 cursor-pointer border-l-2 border-transparent transition-colors">
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-0.5">
+<span class="text-[10px] font-bold text-red-500 uppercase">PATCH</span>
+<span class="text-sm font-medium truncate">/settings/preferences</span>
+</div>
+<p class="text-[11px] text-slate-500 truncate">https://api.core-app.com</p>
+</div>
+<div class="text-right shrink-0">
+<span class="text-xs font-mono text-red-500">403</span>
+<p class="text-[10px] text-slate-500">89ms</p>
+</div>
+</div>
+<!-- Repeated for fill -->
+<div class="flex items-center gap-4 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800/50 cursor-pointer border-l-2 border-transparent transition-colors">
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-0.5">
+<span class="text-[10px] font-bold text-primary uppercase">GET</span>
+<span class="text-sm font-medium truncate">/api/v2/notifications</span>
+</div>
+<p class="text-[11px] text-slate-500 truncate">https://api.core-app.com</p>
+</div>
+<div class="text-right shrink-0">
+<span class="text-xs font-mono text-slate-100">200</span>
+<p class="text-[10px] text-slate-500">210ms</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content: Detailed View -->
+<main class="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark">
+<!-- Tabs Header -->
+<div class="flex items-center px-6 pt-4 border-b border-slate-200 dark:border-slate-800 gap-8">
+<button class="pb-3 text-sm font-medium text-primary border-b-2 border-primary">General</button>
+<button class="pb-3 text-sm font-medium text-slate-500 hover:text-slate-300 transition-colors">Headers</button>
+<button class="pb-3 text-sm font-medium text-slate-500 hover:text-slate-300 transition-colors">Payload</button>
+<button class="pb-3 text-sm font-medium text-slate-500 hover:text-slate-300 transition-colors">Response</button>
+<button class="pb-3 text-sm font-medium text-slate-500 hover:text-slate-300 transition-colors">Timing</button>
+<div class="ml-auto flex items-center gap-4 pb-3">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-slate-300">close</span>
+</div>
+</div>
+<!-- Details Content -->
+<div class="flex-1 overflow-y-auto p-6 custom-scrollbar">
+<div class="space-y-8 max-w-4xl">
+<!-- General Section -->
+<section>
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-4">General Information</h3>
+<div class="grid grid-cols-[140px_1fr] gap-y-3 gap-x-4 text-sm">
+<span class="text-slate-500">Request URL:</span>
+<span class="font-mono break-all text-slate-200">https://analytics-service.internal.io/api/v1/telemetry/events</span>
+<span class="text-slate-500">Request Method:</span>
+<span class="font-bold text-slate-200">POST</span>
+<span class="text-slate-500">Status Code:</span>
+<span class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span class="font-mono">201 Created</span>
+</span>
+<span class="text-slate-500">Remote Address:</span>
+<span class="font-mono">34.212.10.99:443</span>
+<span class="text-slate-500">Referrer Policy:</span>
+<span class="font-mono">strict-origin-when-cross-origin</span>
+</div>
+</section>
+<!-- Headers Preview -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500">Response Headers</h3>
+<span class="text-[10px] text-slate-500 font-mono">(12 items)</span>
+</div>
+<div class="bg-slate-100 dark:bg-slate-900/50 rounded-xl p-4 space-y-2 border border-slate-200 dark:border-slate-800">
+<div class="grid grid-cols-[180px_1fr] gap-2 text-xs">
+<span class="text-primary font-medium">content-type:</span>
+<span class="font-mono text-slate-300">application/json; charset=utf-8</span>
+</div>
+<div class="grid grid-cols-[180px_1fr] gap-2 text-xs">
+<span class="text-primary font-medium">date:</span>
+<span class="font-mono text-slate-300">Mon, 23 Oct 2023 14:22:11 GMT</span>
+</div>
+<div class="grid grid-cols-[180px_1fr] gap-2 text-xs">
+<span class="text-primary font-medium">server:</span>
+<span class="font-mono text-slate-300">nginx/1.18.0 (Ubuntu)</span>
+</div>
+<div class="grid grid-cols-[180px_1fr] gap-2 text-xs">
+<span class="text-primary font-medium">x-ratelimit-limit:</span>
+<span class="font-mono text-slate-300">1000</span>
+</div>
+<div class="grid grid-cols-[180px_1fr] gap-2 text-xs">
+<span class="text-primary font-medium">x-request-id:</span>
+<span class="font-mono text-slate-300">req_8fa21k092j1la</span>
+</div>
+</div>
+</section>
+<!-- Payload Preview -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500">Request Payload</h3>
+<button class="text-[10px] text-primary hover:underline uppercase font-bold">Copy Raw</button>
+</div>
+<div class="bg-slate-900 rounded-xl p-5 border border-slate-800 font-mono text-xs overflow-x-auto">
+<pre class="text-slate-300 leading-relaxed">{
+  <span class="text-primary">"event_type"</span>: <span class="text-green-400">"page_view"</span>,
+  <span class="text-primary">"timestamp"</span>: <span class="text-amber-400">1698070931221</span>,
+  <span class="text-primary">"session_id"</span>: <span class="text-green-400">"sess_92104"</span>,
+  <span class="text-primary">"payload"</span>: {
+    <span class="text-primary">"url"</span>: <span class="text-green-400">"https://app.dashboard.com/home"</span>,
+    <span class="text-primary">"referrer"</span>: <span class="text-green-400">"https://google.com"</span>,
+    <span class="text-primary">"user_agent"</span>: <span class="text-green-400">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)..."</span>
+  },
+  <span class="text-primary">"tags"</span>: [<span class="text-green-400">"prod"</span>, <span class="text-green-400">"v1.2.0"</span>]
+}</pre>
+</div>
+</section>
+</div>
+</div>
+<!-- Footer Stats -->
+<footer class="px-6 py-2 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/30 flex items-center justify-between text-[11px] text-slate-500">
+<div class="flex gap-4">
+<span><strong class="text-slate-300">42</strong> requests</span>
+<span><strong class="text-slate-300">1.2 MB</strong> transferred</span>
+<span><strong class="text-slate-300">4.8 MB</strong> resources</span>
+</div>
+<div class="flex gap-4 items-center">
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Online</span>
+<span class="opacity-50">v2.4.1-stable</span>
+</div>
+</footer>
+</main>
+</div>
+</body></html>

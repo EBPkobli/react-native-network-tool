@@ -1,6 +1,6 @@
 {
   "name": "react-native-network-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React Native SDK for capturing network activity and sending it to a local inspector bridge",
   "license": "MIT",
   "private": false,

@@ -1,6 +1,6 @@
 {
   "name": "react-native-network-bridge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Local bridge service for React Native Network Inspector",
   "license": "MIT",
   "private": false,

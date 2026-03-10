@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useToast } from './Toast';
 
 const SCAN_PORTS = [8347, 8348, 8349, 8350, 8351, 8081, 8082, 8083, 3000, 3001];
@@ -46,7 +46,7 @@ export function ConnectPage({ onConnect }: ConnectPageProps) {
       const url = normalizeBridgeUrl(target);
       if (!url) {
         showToast('error', 'Invalid bridge URL or port');
-        return;
+        return false;
       }
 
       setConnecting(true);
@@ -59,6 +59,7 @@ export function ConnectPage({ onConnect }: ConnectPageProps) {
           localStorage.setItem(LAST_BRIDGE_URL_KEY, url);
           showToast('success', `Connected to ${url}`);
           onConnect(url);
+          return true;
         } else {
           showToast('error', `Bridge returned ${res.status}`);
         }
@@ -67,6 +68,8 @@ export function ConnectPage({ onConnect }: ConnectPageProps) {
       } finally {
         setConnecting(false);
       }
+
+      return false;
     },
     [normalizeBridgeUrl, onConnect, showToast],
   );
@@ -102,6 +105,11 @@ export function ConnectPage({ onConnect }: ConnectPageProps) {
     setScanning(false);
   }, []);
 
+  // Use a ref so the one-time useEffect always sees the latest tryConnect
+  const tryConnectRef = useRef(tryConnect);
+  tryConnectRef.current = tryConnect;
+
+  // Run ONCE on mount — auto-connect from query param or localStorage
   useEffect(() => {
     const queryBridge = new URLSearchParams(window.location.search).get('bridge');
     const lastBridge = localStorage.getItem(LAST_BRIDGE_URL_KEY);
@@ -109,12 +117,19 @@ export function ConnectPage({ onConnect }: ConnectPageProps) {
 
     if (autoTarget) {
       setBridgeInput(autoTarget);
-      void tryConnect(autoTarget);
+      void (async () => {
+        const connected = await tryConnectRef.current(autoTarget);
+        if (!connected) {
+          localStorage.removeItem(LAST_BRIDGE_URL_KEY);
+          await scanDevices();
+        }
+      })();
       return;
     }
 
     void scanDevices();
-  }, [scanDevices, tryConnect]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scanDevices]);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6">

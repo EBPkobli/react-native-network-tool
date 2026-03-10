@@ -1,6 +1,6 @@
 {
   "name": "@network-tool/shared",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shared types, constants, and validation for React Native Network Inspector",
   "license": "MIT",
   "private": false,

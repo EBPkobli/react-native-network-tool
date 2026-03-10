@@ -1,7 +1,9 @@
 {
-  "name": "@network-tool/sdk",
+  "name": "react-native-network-sdk",
   "version": "0.1.0",
-  "private": true,
+  "description": "React Native SDK for capturing network activity and sending it to a local inspector bridge",
+  "license": "MIT",
+  "private": false,
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -16,14 +18,25 @@
     }
   },
   "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EBPkobli/react-native-network-tool.git"
+  },
+  "keywords": [
+    "react-native",
+    "network",
+    "inspector",
+    "sdk"
+  ],
   "scripts": {
-    "build": "tsup src/index.ts src/axios-adapter.ts --format esm --dts --clean",
+    "build": "tsup --config tsup.config.ts",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "@network-tool/shared": "0.1.0"
-  },
   "devDependencies": {
+    "@network-tool/shared": "0.1.0",
     "tsup": "^8.0.0",
     "typescript": "^5.4.0"
   }

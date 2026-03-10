@@ -7,19 +7,12 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
-  Platform,
 } from 'react-native';
-import { NetworkInspector } from '@network-tool/sdk';
+import { initDevNetworkInspector } from 'react-native-network-sdk';
 
-// Initialize the SDK — captures all fetch() calls and sends them to the bridge.
-// Use __DEV__ guard so it's a no-op in production builds.
-NetworkInspector.init({
-  enabled: __DEV__,
-  // Android emulator needs 10.0.2.2 to reach host machine localhost.
-  // iOS simulator and web can use localhost directly.
-  bridgeHost: Platform.OS === 'android' ? '10.0.2.2' : 'localhost',
-  bridgePort: 8347,
-});
+// Initialize the SDK once at app startup.
+// The helper uses __DEV__ automatically and falls back across common local hosts.
+initDevNetworkInspector();
 
 // ─── Test API calls ──────────────────────────────────────────
 

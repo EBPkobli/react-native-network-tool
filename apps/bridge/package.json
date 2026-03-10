@@ -1,24 +1,55 @@
 {
-  "name": "@network-tool/bridge",
+  "name": "react-native-network-bridge",
   "version": "0.1.0",
-  "private": true,
+  "description": "Local bridge service for React Native Network Inspector",
+  "license": "MIT",
+  "private": false,
   "type": "module",
   "main": "./dist/index.js",
-  "bin": {
-    "network-tool-bridge": "./dist/index.js"
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
   },
+  "files": [
+    "dist",
+    "public"
+  ],
+  "bin": {
+    "bridge": "dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EBPkobli/react-native-network-tool.git"
+  },
+  "keywords": [
+    "react-native",
+    "network",
+    "inspector",
+    "bridge",
+    "cli"
+  ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --clean",
+    "sync:dashboard": "node scripts/sync-dashboard.mjs",
+    "build": "npm run sync:dashboard && tsup --config tsup.config.ts",
     "dev": "tsx src/index.ts",
     "typecheck": "tsc --noEmit"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
-    "@network-tool/shared": "0.1.0",
     "cors": "^2.8.6",
     "express": "^4.22.1",
     "ws": "^8.19.0"
   },
   "devDependencies": {
+    "@network-tool/shared": "0.1.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/ws": "^8.18.1",

@@ -1,4 +1,4 @@
-import type { NetworkEvent, NetworkInspectorConfig } from '@network-tool/shared';
+import type { NetworkEvent, NetworkInspectorConfig } from './types.js';
 import {
   DEFAULT_BRIDGE_HOST,
   DEFAULT_BRIDGE_HOSTS,
@@ -19,10 +19,18 @@ type ResolvedNetworkInspectorConfig = {
   enabled: boolean;
 };
 
+export type DevNetworkInspectorConfig = Omit<NetworkInspectorConfig, 'enabled'> & {
+  enabled?: boolean;
+};
+
 let currentConfig: ResolvedNetworkInspectorConfig | null = null;
 let transport: Transport | null = null;
 let originalFetch: typeof globalThis.fetch | null = null;
 let maskSet: Set<string> | null = null; // pre-built from config.maskedHeaders
+
+type DevGlobal = typeof globalThis & {
+  __DEV__?: boolean;
+};
 
 // ─── Config resolution ───────────────────────────────────────
 
@@ -115,6 +123,25 @@ export const NetworkInspector = {
     return currentConfig !== null;
   },
 };
+
+/**
+ * Convenience helper for React Native apps.
+ *
+ * Defaults `enabled` from the global __DEV__ flag when available, so app code
+ * only needs to pass bridge-related config (or nothing at all for defaults).
+ */
+export function initDevNetworkInspector(config?: DevNetworkInspectorConfig): void {
+  const devEnabled =
+    config?.enabled ?? ((globalThis as DevGlobal).__DEV__ ?? true);
+
+  NetworkInspector.init({
+    ...config,
+    enabled: devEnabled,
+  });
+}
+
+// Backward-compatible alias for callers who use the misspelled name.
+export const initDevNetworkInpector = initDevNetworkInspector;
 
 // ─── Internal helpers (used by interceptor in next phase) ────
 

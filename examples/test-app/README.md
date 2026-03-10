@@ -37,7 +37,7 @@ npx expo start --web
 
 ## What it does
 
-- Initializes `NetworkInspector` from `@network-tool/sdk`
+- Initializes `NetworkInspector` from `react-native-network-sdk`
 - Provides buttons to fire various `fetch()` calls (GET, POST, PUT, DELETE, 404, network error)
 - The SDK intercepts each call, masks `Authorization` + `X-Api-Key` headers, and sends events to the bridge
 - Open the dashboard at `http://localhost:5173` to see them live

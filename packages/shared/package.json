@@ -1,7 +1,9 @@
 {
   "name": "@network-tool/shared",
   "version": "0.1.0",
-  "private": true,
+  "description": "Shared types, constants, and validation for React Native Network Inspector",
+  "license": "MIT",
+  "private": false,
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -12,6 +14,19 @@
     }
   },
   "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EBPkobli/react-native-network-tool.git"
+  },
+  "keywords": [
+    "react-native",
+    "network",
+    "inspector",
+    "types"
+  ],
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts --clean",
     "typecheck": "tsc --noEmit"

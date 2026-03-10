@@ -1,4 +1,4 @@
-import type { NetworkEvent } from '@network-tool/shared';
+import type { NetworkEvent } from './types.js';
 
 /**
  * Replace header values with '[REDACTED]' for headers whose names

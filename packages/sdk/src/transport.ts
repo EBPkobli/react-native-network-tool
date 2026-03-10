@@ -1,4 +1,4 @@
-import type { NetworkEvent } from '@network-tool/shared';
+import type { NetworkEvent } from './types.js';
 import { API_PATHS } from '@network-tool/shared';
 
 /**

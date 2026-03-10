@@ -1,4 +1,4 @@
-import type { NetworkEvent } from '@network-tool/shared';
+import type { NetworkEvent } from './types.js';
 import { DEFAULT_MAX_BODY_SIZE } from '@network-tool/shared';
 import { generateId, serializeBody, truncateBody, isBinaryContentType } from './event-builder.js';
 import { processEvent } from './index.js';
@@ -190,7 +190,7 @@ function buildAxiosErrorEvent(
  *
  * @example
  *   import axios from 'axios';
- *   import { attachAxiosInterceptor } from '@network-tool/sdk/axios';
+ *   import { attachAxiosInterceptor } from 'react-native-network-sdk/axios';
  *   attachAxiosInterceptor(axios);
  *
  *   // Or with a custom instance:

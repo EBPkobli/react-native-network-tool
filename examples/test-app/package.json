@@ -9,7 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@network-tool/sdk": "file:../../packages/sdk",
+    "react-native-network-sdk": "file:../../packages/sdk",
     "@network-tool/shared": "file:../../packages/shared",
     "expo": "~55.0.5",
     "expo-status-bar": "~55.0.4",

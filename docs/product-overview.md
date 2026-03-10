@@ -34,7 +34,7 @@ A React web app. Shows a live list of captured requests with filtering, detail i
 ## Core User Flow
 
 1. Developer adds SDK to their RN app (one `init()` call)
-2. Developer starts the bridge (`npx @network-tool/bridge`)
+2. Developer starts the bridge (`npx react-native-network-bridge`)
 3. Developer opens `http://localhost:8347` in browser
 4. Developer uses their app normally
 5. Every fetch request appears in the dashboard in real time

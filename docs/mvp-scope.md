@@ -20,7 +20,7 @@ One developer. One device. One session. Localhost only.
 | Request detail | Panel: headers, body, timing |
 | Filters | By HTTP method and status code range |
 | Session clear | Button to reset the event list |
-| Single CLI command | `npx @network-tool/bridge` starts bridge + serves dashboard |
+| Single CLI command | `npx react-native-network-bridge` starts bridge + serves dashboard |
 
 ## Out of Scope (Deferred)
 

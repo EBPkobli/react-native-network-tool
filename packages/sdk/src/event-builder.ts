@@ -1,4 +1,4 @@
-import type { NetworkEvent } from '@network-tool/shared';
+import type { NetworkEvent } from './types.js';
 import { DEFAULT_MAX_BODY_SIZE } from '@network-tool/shared';
 
 // ─── ID generation ───────────────────────────────────────────

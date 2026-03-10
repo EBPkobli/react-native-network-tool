@@ -1,7 +1,8 @@
 import { DEFAULT_BRIDGE_PORT } from '@network-tool/shared';
+import { spawn } from 'child_process';
 import { startServer, stopServer } from './server.js';
 
-function parseArgs(): { port: number; maxEvents: number } {
+function parseArgs(): { port: number; maxEvents: number; open: boolean } {
   const args = process.argv.slice(2);
   const parsePositiveInt = (value: string | undefined, fallback: number) => {
     const parsed = Number.parseInt(value ?? '', 10);
@@ -15,6 +16,10 @@ function parseArgs(): { port: number; maxEvents: number } {
     process.env.NETWORK_TOOL_MAX_EVENTS ?? process.env.MAX_EVENTS,
     1000,
   );
+  let open =
+    process.env.NETWORK_TOOL_OPEN_DASHBOARD === undefined
+      ? true
+      : process.env.NETWORK_TOOL_OPEN_DASHBOARD !== 'false';
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--port' && args[i + 1]) {
@@ -27,12 +32,47 @@ function parseArgs(): { port: number; maxEvents: number } {
       if (!isNaN(m) && m > 0) maxEvents = m;
       i++;
     }
+    if (args[i] === '--open') {
+      open = true;
+    }
+    if (args[i] === '--no-open') {
+      open = false;
+    }
   }
-  return { port, maxEvents };
+  return { port, maxEvents, open };
 }
 
-const { port, maxEvents } = parseArgs();
+function openDashboard(url: string): void {
+  const platform = process.platform;
+  const command =
+    platform === 'darwin'
+      ? 'open'
+      : platform === 'win32'
+        ? 'cmd'
+        : 'xdg-open';
+  const args =
+    platform === 'win32'
+      ? ['/c', 'start', '', url]
+      : [url];
+
+  try {
+    const child = spawn(command, args, {
+      detached: true,
+      stdio: 'ignore',
+    });
+    child.unref();
+  } catch {
+    // Browser launch is best-effort only.
+  }
+}
+
+const { port, maxEvents, open } = parseArgs();
 const server = startServer(port, maxEvents);
+
+if (open) {
+  const bridgeUrl = encodeURIComponent(`http://localhost:${port}`);
+  openDashboard(`http://localhost:${port}/?bridge=${bridgeUrl}`);
+}
 
 function shutdown() {
   console.log('\n[bridge] shutting down...');

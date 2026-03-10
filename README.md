@@ -1,178 +1,337 @@
 # React Native Network Inspector
 
-A local developer tool that captures network activity from React Native apps and displays it in a web dashboard.
+React Native Network Inspector is a local development tool for React Native apps.
 
-## What This Does
+It has two parts:
 
-1. **SDK** — drop into your RN app to capture all `fetch` requests
-2. **Bridge** — local Node.js service that receives and stores events
-3. **Dashboard** — browser UI to inspect requests in real time
+- `react-native-network-sdk`: installed inside the React Native app
+- `react-native-network-bridge`: run on the developer machine
 
+The SDK captures network activity from the app. The bridge receives those events, serves the dashboard, and opens the browser UI.
+
+## What Developers Actually Do
+
+A developer using this tool does not import both packages into the app.
+
+They do this instead:
+
+1. Install `react-native-network-sdk` in the React Native app
+2. Add one line in app startup code
+3. Run `react-native-network-bridge` on the development machine
+4. Inspect requests in the dashboard
+
+## Roles
+
+### `react-native-network-sdk`
+
+This package belongs inside the React Native project.
+
+It is responsible for:
+
+- intercepting `fetch`
+- collecting request and response data
+- masking sensitive headers
+- sending events to the bridge
+
+App-side usage:
+
+```ts
+import { initDevNetworkInspector } from 'react-native-network-sdk';
+
+initDevNetworkInspector();
 ```
-RN App (SDK) ──POST──▶ Bridge (Node.js) ──WS──▶ Dashboard (Browser)
-```
 
-## Quick Start
+### `react-native-network-bridge`
+
+This package runs on the host machine, not inside the mobile app.
+
+It is responsible for:
+
+- accepting incoming events from the SDK
+- storing events in memory
+- exposing HTTP and WebSocket endpoints
+- serving the dashboard UI
+- opening the dashboard in the browser
+
+Host-side usage:
 
 ```bash
-# 1. Add one line to your app entry (see SDK Setup below)
-# 2. Start the bridge
-npm run bridge
-
-# 3. Start the dashboard
-npm run dashboard
-
-# 4. Open http://localhost:5173
+npx react-native-network-bridge
 ```
 
-## SDK Setup
+Important:
 
-### Basic (fetch only)
+- the app imports the SDK
+- the app does not import the bridge
+- the bridge is started as a local command
 
-```ts
-import { NetworkInspector } from '@network-tool/sdk';
+## Why This Split Exists
 
-// Only activate in dev builds — __DEV__ is set to false in production RN apps
-NetworkInspector.init({ enabled: __DEV__ });
+The mobile app cannot directly start a process on the developer machine.
+
+Because of that, the system must be split into:
+
+- code that runs inside the app
+- a local process that runs on the host machine
+
+That is why both pieces exist.
+
+## Runtime Flow
+
+```text
+React Native App
+  -> SDK intercepts fetch calls
+  -> SDK POSTs events to the local bridge
+  -> Bridge stores events and broadcasts updates
+  -> Dashboard renders requests in real time
 ```
 
-### Axios support
+## Installation
+
+### 1. Install the SDK in the React Native app
+
+```bash
+npm install react-native-network-sdk
+```
+
+Add this once in your app entry file:
 
 ```ts
-import { attachAxiosInterceptor } from '@network-tool/sdk/axios';
-import axios from 'axios';
+import { initDevNetworkInspector } from 'react-native-network-sdk';
 
-if (__DEV__) {
-  attachAxiosInterceptor(axios);
+initDevNetworkInspector();
+```
+
+Good places for that call:
+
+- `index.js`
+- `index.ts`
+- `App.tsx`
+- any root bootstrap file
+
+### 2. Run the bridge on the development machine
+
+Without installing globally:
+
+```bash
+npx react-native-network-bridge
+```
+
+Or install it in the project:
+
+```bash
+npm install -D react-native-network-bridge
+```
+
+Then run:
+
+```bash
+bridge
+```
+
+## Recommended Consumer Scripts
+
+If you want the bridge to start together with the app development command, add a host-side script in the consumer project.
+
+React Native example:
+
+```json
+{
+  "scripts": {
+    "network:bridge": "bridge",
+    "dev": "concurrently \"npm run network:bridge\" \"react-native start\""
+  }
 }
 ```
 
-### Configuration options
+Expo example:
+
+```json
+{
+  "scripts": {
+    "network:bridge": "bridge",
+    "dev": "concurrently \"npm run network:bridge\" \"expo start\""
+  }
+}
+```
+
+This is the correct way to make the dashboard come up when developers start working.
+
+## Default Developer Experience
+
+The intended default workflow is:
+
+1. Add `initDevNetworkInspector()` to the app
+2. Start the app normally
+3. Run `npx react-native-network-bridge`
+4. Let the browser open automatically
+5. Inspect requests in the dashboard
+
+## Optional SDK Configuration
+
+The default app integration should usually be:
 
 ```ts
-NetworkInspector.init({
-  enabled: __DEV__,              // required — always guard with __DEV__
-  bridgeUrl: 'http://localhost:8347', // simplest option
-  // or use bridgeHost / bridgeHosts if you need more control
-  maskedHeaders: [               // headers whose values are replaced with [REDACTED]
-    'authorization',
-    'cookie',
-    'x-api-key',
-    // …default list covers the most common secrets
-  ],
-  maxBodySize: 65_536,           // max bytes stored per request/response body (default: 64 KB)
+import { initDevNetworkInspector } from 'react-native-network-sdk';
+
+initDevNetworkInspector();
+```
+
+If needed, the SDK can still be configured:
+
+```ts
+import { initDevNetworkInspector } from 'react-native-network-sdk';
+
+initDevNetworkInspector({
+  bridgeUrl: 'http://localhost:8347',
+  maskedHeaders: ['authorization', 'cookie', 'x-api-key'],
+  maxBodySize: 65_536,
 });
 ```
 
-### `__DEV__` guard — why it matters
+## Architecture
 
-React Native sets `__DEV__` to `true` during development and `false` in production
-builds. **Always pass `enabled: __DEV__`** — this ensures:
+### SDK layer
 
-- The SDK is a no-op in production (zero overhead, zero network calls)
-- No sensitive data is ever captured in releases
-- The bridge port is never contacted from production devices
+Location: `packages/sdk`
 
-The guard is enforced at the call site, not inside the SDK, so it is always explicit.
+Responsibilities:
+
+- patch `fetch`
+- build normalized network events
+- redact sensitive headers
+- send events to the bridge
+
+### Bridge layer
+
+Location: `apps/bridge`
+
+Responsibilities:
+
+- expose `/health`
+- expose `/api/events`
+- expose `/ws`
+- manage in-memory sessions and event storage
+- serve the embedded dashboard
+
+### Dashboard layer
+
+Location: `apps/dashboard`
+
+Responsibilities:
+
+- connect to the bridge
+- hydrate existing events
+- listen for live updates
+- render request details and filters
+
+The dashboard is not meant to be imported into the mobile app. It is served by the bridge.
+
+## Infrastructure Model
+
+This tool is local-first.
+
+The expected infrastructure is:
+
+- one developer machine
+- one bridge process
+- one browser tab
+- one simulator or physical device
+
+There is no cloud backend in the intended setup.
 
 ## Device Connectivity
 
+### iOS simulator
+
+Usually no extra setup is needed.
+
 ### Android emulator
 
-The bridge listens on your host machine. The emulator can reach it via the `adb
-reverse` port-forward command:
+Run:
 
 ```bash
 adb reverse tcp:8347 tcp:8347
 ```
 
-Run this once per emulator session (or after a restart). It maps port 8347 on the
-emulator to port 8347 on your machine, so `http://localhost:8347` works inside the app.
+### Physical device
 
-If you skip `adb reverse`, the SDK will also try `10.0.2.2` automatically when you
-leave `bridgeUrl` / `bridgeHost` unset.
-
-### iOS simulator
-
-The iOS simulator shares the host machine's network directly — no extra setup needed.
-`http://localhost:8347` works out of the box.
-
-### Physical device (Android or iOS)
-
-Use your machine's LAN IP address instead of `localhost`:
+If needed, point the SDK at your machine's LAN IP:
 
 ```ts
-NetworkInspector.init({
-  enabled: __DEV__,
-  bridgeHost: '192.168.1.42', // your machine's IP on the local network
+import { initDevNetworkInspector } from 'react-native-network-sdk';
+
+initDevNetworkInspector({
+  bridgeHost: '192.168.1.42',
 });
-```
-
-Find your machine's IP with `ipconfig getifaddr en0` (macOS), `ip addr` (Linux),
-or check System Preferences → Network.
-
-Make sure both your device and machine are on the same Wi-Fi network and that your
-firewall allows connections on port 8347.
-
-## Project Structure
-
-```
-packages/shared    → shared types, constants, validation
-packages/sdk       → React Native SDK (captures requests)
-apps/bridge        → local Node.js bridge (receives + stores events)
-apps/dashboard     → React web dashboard (displays events)
-```
-
-## Development
-
-```bash
-npm install              # install all workspace deps
-npm run build:shared     # build shared types first
-npm run build:sdk        # build SDK
-npm run build            # build all
-npm run typecheck        # typecheck all packages
-npm run bridge           # start bridge (port 8347 by default)
-npm run dashboard        # start dashboard (port 5173, host 0.0.0.0)
-```
-
-### E2E integration test
-
-To verify all three layers work without a real RN app:
-
-```bash
-# Terminal 1 — start the bridge
-npm run dev:bridge
-
-# Terminal 2 — run the integration test
-npm run test:e2e
-```
-
-The script sends a variety of events (happy path, 4xx errors, network failures,
-slow requests, duplicates, 64 KB body) and then prints a summary. Open
-`http://localhost:5173` while it runs to see events appear in real time.
-
-Options:
-```bash
-node scripts/e2e-test.mjs --bridge http://localhost:8347 --count 20 --delay 300
 ```
 
 ## Sensitive Data Masking
 
-The SDK automatically redacts sensitive header values before sending them to the bridge.
-The default masked list covers: `authorization`, `cookie`, `set-cookie`,
-`proxy-authorization`, `x-api-key`, `x-auth-token`.
+Sensitive headers are redacted before events leave the app.
 
-Redacted values are replaced with `[REDACTED]` in both stored events and the dashboard.
-The original value never leaves the device.
+Default masked headers include:
 
-## Status
+- `authorization`
+- `cookie`
+- `set-cookie`
+- `proxy-authorization`
+- `x-api-key`
+- `x-auth-token`
 
-This project is under active development. See [docs/roadmap.md](docs/roadmap.md) for the current plan and [docs/progress/](docs/progress/) for per-layer status.
+Masked values appear as `[REDACTED]`.
 
-## Docs
+## Local Development In This Repo
 
-- [Product Overview](docs/product-overview.md)
-- [MVP Scope](docs/mvp-scope.md)
-- [Architecture](docs/architecture.md)
-- [Roadmap](docs/roadmap.md)
-- [AI Workflow](docs/workflow.md)
+```bash
+npm install
+npm run build:dashboard
+npm run build:bridge
+npm run dev:bridge
+npm run dev:dashboard
+```
+
+Additional commands:
+
+```bash
+npm run build:shared
+npm run build:sdk
+npm run build:bridge
+npm run build:dashboard
+npm run build
+npm run typecheck
+npm run test:e2e
+```
+
+Notes:
+
+- `apps/bridge` bundles a dashboard snapshot into the published bridge package
+- `apps/dashboard` is the dashboard source app used during repo development
+- `packages/sdk` is the package intended to be imported by consumer apps
+
+## Repo Layout
+
+```text
+packages/shared      shared types, constants, validation
+packages/sdk         React Native SDK
+apps/bridge          local bridge service
+apps/dashboard       dashboard source
+examples/test-app    Expo sample app
+docs/                product and engineering docs
+```
+
+## Documentation Guide
+
+Additional documentation:
+
+| File | Purpose |
+| --- | --- |
+| `docs/product-overview.md` | Product direction |
+| `docs/mvp-scope.md` | Scope boundaries |
+| `docs/architecture.md` | Internal architecture notes |
+| `docs/roadmap.md` | Planned work |
+| `docs/progress/layer-1-sdk.md` | SDK progress |
+| `docs/progress/layer-2-bridge.md` | Bridge progress |
+| `docs/progress/layer-3-dashboard.md` | Dashboard progress |
+| `docs/progress/phase-6-integration.md` | Integration notes |
+| `docs/workflow.md` | AI-assisted workflow |

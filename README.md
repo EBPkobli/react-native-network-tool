@@ -326,6 +326,7 @@ Additional documentation:
 
 | File | Purpose |
 | --- | --- |
+| `.github/prompts/17-consumer-integration.prompt.md` | Prompt for AI assistants integrating the SDK into external React Native apps |
 | `docs/product-overview.md` | Product direction |
 | `docs/mvp-scope.md` | Scope boundaries |
 | `docs/architecture.md` | Internal architecture notes |

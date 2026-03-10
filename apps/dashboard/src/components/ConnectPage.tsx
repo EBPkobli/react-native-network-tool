@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useToast } from './Toast.js';
+import { useToast } from './Toast';
 
 const SCAN_PORTS = [8347, 8348, 8349, 8350, 8351, 8081, 8082, 8083, 3000, 3001];
 const SCAN_TIMEOUT = 1500;

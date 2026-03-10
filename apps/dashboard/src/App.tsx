@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
-import { ToastProvider } from './components/Toast.js';
-import { ConnectPage } from './components/ConnectPage.js';
-import { BridgeProvider } from './context/BridgeProvider.js';
-import { setBridgeUrl } from './api/client.js';
-import { MainPage } from './components/MainPage.js';
+import { ToastProvider } from './components/Toast';
+import { ConnectPage } from './components/ConnectPage';
+import { BridgeProvider } from './context/BridgeProvider';
+import { setBridgeUrl } from './api/client';
+import { MainPage } from './components/MainPage';
 
 export function App() {
   const [bridgeUrl, setBridge] = useState<string | null>(null);

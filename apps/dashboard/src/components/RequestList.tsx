@@ -1,7 +1,7 @@
-import { useBridge } from '../context/BridgeContext.js';
-import { useFilteredEvents } from '../hooks/useFilteredEvents.js';
-import { clearEvents, exportSession } from '../api/client.js';
-import type { DecoratedEvent } from '../types.js';
+import { useBridge } from '../context/BridgeContext';
+import { useFilteredEvents } from '../hooks/useFilteredEvents';
+import { clearEvents, exportSession } from '../api/client';
+import type { DecoratedEvent } from '../types';
 
 const METHOD_COLOR: Record<string, string> = {
   GET: 'text-blue-500',

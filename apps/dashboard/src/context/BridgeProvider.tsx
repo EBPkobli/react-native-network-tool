@@ -1,9 +1,9 @@
 import { useReducer, useEffect, useRef, useCallback } from 'react';
 import type { ReactNode } from 'react';
-import { reducer, initialState } from '../reducer.js';
-import { BridgeContext } from './BridgeContext.js';
+import { reducer, initialState } from '../reducer';
+import { BridgeContext } from './BridgeContext';
 import type { NetworkEvent } from '@network-tool/shared';
-import type { SessionMeta } from '../types.js';
+import type { SessionMeta } from '../types';
 
 const MAX_RECONNECT = 5;
 const RECONNECT_DELAY_MS = 2000;

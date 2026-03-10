@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useBridge } from '../context/BridgeContext.js';
-import { useCopyText } from '../hooks/useCopyText.js';
-import { JsonViewer } from './JsonViewer.js';
+import { useBridge } from '../context/BridgeContext';
+import { useCopyText } from '../hooks/useCopyText';
+import { JsonViewer } from './JsonViewer';
 import type { NetworkEvent } from '@network-tool/shared';
 
 function exportEventAsJson(event: NetworkEvent): void {

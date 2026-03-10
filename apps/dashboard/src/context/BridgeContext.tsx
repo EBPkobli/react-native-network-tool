@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 import type { Dispatch } from 'react';
-import type { AppState } from '../types.js';
-import type { Action } from '../reducer.js';
+import type { AppState } from '../types';
+import type { Action } from '../reducer';
 
 export interface BridgeContextValue {
   state: AppState;

@@ -1,5 +1,5 @@
 import type { NetworkEvent } from '@network-tool/shared';
-import type { AppState, ConnectionStatus, SessionMeta } from './types.js';
+import type { AppState, ConnectionStatus, SessionMeta } from './types';
 
 export type Action =
   | { type: 'EVENT_RECEIVED'; payload: NetworkEvent }

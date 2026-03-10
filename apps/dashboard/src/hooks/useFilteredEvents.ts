@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import type { NetworkEvent } from '@network-tool/shared';
-import type { FilterState, DecoratedEvent } from '../types.js';
+import type { FilterState, DecoratedEvent } from '../types';
 
 const SLOW_MS = 3000;
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { RequestList } from './RequestList.js';
-import { DetailPanel } from './DetailPanel.js';
-import { useBridge } from '../context/BridgeContext.js';
+import { RequestList } from './RequestList';
+import { DetailPanel } from './DetailPanel';
+import { useBridge } from '../context/BridgeContext';
 
 interface MainPageProps {
   onDisconnect: () => void;
